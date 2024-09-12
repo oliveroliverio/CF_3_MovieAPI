@@ -33,6 +33,11 @@ let students = [
 	},
 ]
 
+// Get default index.html page
+app.get('/', (req, res) => {
+	res.sendFile(__dirname + '/index.html')
+})
+
 // Gets the list of data about ALL students
 
 app.get('/students', (req, res) => {
