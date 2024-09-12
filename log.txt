@@ -17,3 +17,5 @@ Tue Sep 03 2024 18:16:34 GMT-0700 (Pacific Daylight Time) - Requested index
 ::1 - - [12/Sep/2024:00:30:46 +0000] "GET /style.css HTTP/1.1" 404 148
 ::1 - - [12/Sep/2024:17:26:46 +0000] "GET /style.css HTTP/1.1" 404 148
 ::1 - - [12/Sep/2024:22:25:59 +0000] "GET /movies HTTP/1.1" 200 3670
+::1 - - [12/Sep/2024:23:40:41 +0000] "GET /movies/asdf HTTP/1.1" 400 15
+::1 - - [12/Sep/2024:23:41:00 +0000] "GET /movies/The%20Shining HTTP/1.1" 200 534

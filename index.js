@@ -5,11 +5,15 @@ const express = require('express'),
 const app = express()
 
 // array of movies with title and director.
-let movies = [
+let topMovies = [
 	{
 		title: 'Blade Runner',
 		director: 'Ridley Scott',
-		genre: 'Sci-Fi',
+		genre: {
+			name: 'Sci-Fi',
+			description:
+				'Science fiction films are often speculative in nature and explore futuristic concepts such as advanced science and technology, space exploration, time travel, and extraterrestrial life.',
+		},
 		description:
 			'A blade runner must pursue and terminate four replicants who stole a ship in space, and have returned to Earth to find their creator.',
 		img_url: '/public/img/blade_runner.jpg',
@@ -23,7 +27,11 @@ let movies = [
 	{
 		title: 'The Matrix',
 		director: 'Lana Wachowski, Lilly Wachowski',
-		genre: 'Sci-Fi',
+		genre: {
+			name: 'Sci-Fi',
+			description:
+				'Science fiction films are often speculative in nature and explore futuristic concepts such as advanced science and technology, space exploration, time travel, and extraterrestrial life.',
+		},
 		description:
 			'A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.',
 		img_url: '/public/img/the_matrix.jpg',
@@ -37,7 +45,11 @@ let movies = [
 	{
 		title: 'Inception',
 		director: 'Christopher Nolan',
-		genre: 'Sci-Fi',
+		genre: {
+			name: 'Sci-Fi',
+			description:
+				'Science fiction films are often speculative in nature and explore futuristic concepts such as advanced science and technology, space exploration, time travel, and extraterrestrial life.',
+		},
 		description:
 			'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.',
 		img_url: '/public/img/inception.jpg',
@@ -51,7 +63,11 @@ let movies = [
 	{
 		title: 'Star Wars: Episode IV - A New Hope',
 		director: 'George Lucas',
-		genre: 'Sci-Fi',
+		genre: {
+			name: 'Sci-Fi',
+			description:
+				'Science fiction films are often speculative in nature and explore futuristic concepts such as advanced science and technology, space exploration, time travel, and extraterrestrial life.',
+		},
 		description:
 			"Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee, and two droids to save the galaxy from the Empire's world-destroying battle station.",
 		img_url: '/public/img/star_wars.jpg',
@@ -65,7 +81,11 @@ let movies = [
 	{
 		title: 'The Terminator',
 		director: 'James Cameron',
-		genre: 'Sci-Fi',
+		genre: {
+			name: 'Sci-Fi',
+			description:
+				'Science fiction films are often speculative in nature and explore futuristic concepts such as advanced science and technology, space exploration, time travel, and extraterrestrial life.',
+		},
 		description:
 			'A cyborg, identical to the one who failed to kill Sarah Connor, must now protect her ten-year-old son, John Connor, from a more advanced and powerful cyborg.',
 		img_url: '/public/img/the_terminator.jpg',
@@ -79,7 +99,11 @@ let movies = [
 	{
 		title: '2001: A Space Odyssey',
 		director: 'Stanley Kubrick',
-		genre: 'Sci-Fi',
+		genre: {
+			name: 'Sci-Fi',
+			description:
+				'Science fiction films are often speculative in nature and explore futuristic concepts such as advanced science and technology, space exploration, time travel, and extraterrestrial life.',
+		},
 		description:
 			'After discovering a mysterious artifact buried beneath the lunar surface, mankind sets off on a quest to find its origins with help from intelligent supercomputer HAL 9000.',
 		img_url: '/public/img/2001_space_odyssey.jpg',
@@ -93,7 +117,11 @@ let movies = [
 	{
 		title: 'Alien',
 		director: 'Ridley Scott',
-		genre: 'Horror',
+		genre: {
+			name: 'Horror',
+			description:
+				'Horror films are intended to frighten, scare, or disgust the audience.',
+		},
 		description:
 			'After a space merchant vessel receives an unknown transmission as a distress call, one of the crew is attacked by a mysterious lifeform, and they soon realize that its life cycle has merely begun.',
 		img_url: '/public/img/alien.jpg',
@@ -107,7 +135,11 @@ let movies = [
 	{
 		title: 'Interstellar',
 		director: 'Christopher Nolan',
-		genre: 'Sci-Fi',
+		genre: {
+			name: 'Sci-Fi',
+			description:
+				'Science fiction films are often speculative in nature and explore futuristic concepts such as advanced science and technology, space exploration, time travel, and extraterrestrial life.',
+		},
 		description:
 			"A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
 		img_url: '/public/img/interstellar.jpg',
@@ -121,7 +153,11 @@ let movies = [
 	{
 		title: 'E.T. the Extra-Terrestrial',
 		director: 'Steven Spielberg',
-		genre: 'Sci-Fi',
+		genre: {
+			name: 'Sci-Fi',
+			description:
+				'Science fiction films are often speculative in nature and explore futuristic concepts such as advanced science and technology, space exploration, time travel, and extraterrestrial life.',
+		},
 		description:
 			'A troubled child summons the courage to help a friendly alien escape Earth and return to his home world.',
 		img_url: '/public/img/et.jpg',
@@ -135,7 +171,11 @@ let movies = [
 	{
 		title: 'Back to the Future',
 		director: 'Robert Zemeckis',
-		genre: 'Sci-Fi',
+		genre: {
+			name: 'Sci-Fi',
+			description:
+				'Science fiction films are often speculative in nature and explore futuristic concepts such as advanced science and technology, space exploration, time travel, and extraterrestrial life.',
+		},
 		description:
 			'Marty McFly, a 17-year-old high school student, is accidentally sent thirty years into the past in a time-traveling DeLorean invented by his close friend, eccentric scientist Doc Brown.',
 		img_url: '/public/img/back_to_the_future.jpg',
@@ -149,7 +189,11 @@ let movies = [
 	{
 		title: 'When Harry Met Sally',
 		director: 'Rob Reiner',
-		genre: 'Romantic Comedy',
+		genre: {
+			name: 'Romantic Comedy',
+			description:
+				'Romantic comedy films are light-hearted, humorous plotlines centered on romantic ideals such as that true love is able to surmount most obstacles.',
+		},
 		description:
 			'Harry and Sally have known each other for years, and are very good friends, but they fear sex would ruin the friendship.',
 		img_url: '/public/img/when_harry_met_sally.jpg',
@@ -163,7 +207,11 @@ let movies = [
 	{
 		title: 'The Shining',
 		director: 'Stanley Kubrick',
-		genre: 'Horror',
+		genre: {
+			name: 'Horror',
+			description:
+				'Horror films are intended to frighten, scare, or disgust the audience.',
+		},
 		description:
 			'A family heads to an isolated hotel for the winter where a sinister presence influences the father into violence, while his psychic son sees horrific forebodings from both past and future.',
 		img_url: '/public/img/the_shining.jpg',
@@ -177,7 +225,11 @@ let movies = [
 	{
 		title: 'March of the Penguins',
 		director: 'Luc Jacquet',
-		genre: 'Documentary',
+		genre: {
+			name: 'Documentary',
+			description:
+				'Documentary films are non-fictional motion pictures intended to document some aspect of reality, primarily for the purposes of instruction, education, or maintaining a historical record.',
+		},
 		description:
 			'A look at the annual journey of Emperor penguins as they march -- single file -- to their traditional breeding ground.',
 		img_url: '/public/img/march_of_the_penguins.jpg',
@@ -225,7 +277,7 @@ app.use(express.static('public'))
 
 // get all movies
 app.get('/movies', (req, res) => {
-	res.json(topMovies)
+	res.status(200).json(movies)
 })
 
 // Error-handling middleware
@@ -241,17 +293,20 @@ app.listen(8080, () => {
 
 // return data for a single movie by title
 app.get('/movies/:title', (req, res) => {
-	res.json(
-		topMovies.find((movie) => {
-			return movie.title === req.params.title
-		})
-	)
+	let { title } = req.params
+	let movie = movies.find((movie) => movie.title === title)
+
+	if (movie) {
+		return res.status(200).json(movie)
+	} else {
+		res.status(400).send('Movie not found')
+	}
 })
 
 // return genre data for a single movie by title
 app.get('/movies/:title/genre', (req, res) => {
-	res.json(
-		topMovies.find((movie) => {
+	let { genre } = res.json(
+		movies.find((movie) => {
 			return movie.title === req.params.title
 		}).genre
 	)
@@ -260,7 +315,7 @@ app.get('/movies/:title/genre', (req, res) => {
 // return director data for a single movie by title
 app.get('/movies/:title/director', (req, res) => {
 	res.json(
-		topMovies.find((movie) => {
+		movies.find((movie) => {
 			return movie.title === req.params.title
 		}).director
 	)
@@ -269,7 +324,7 @@ app.get('/movies/:title/director', (req, res) => {
 // return director data by director name
 app.get('/directors/:name', (req, res) => {
 	res.json(
-		topMovies.find((movie) => {
+		movies.find((movie) => {
 			return movie.director === req.params.name
 		}).director_info
 	)
