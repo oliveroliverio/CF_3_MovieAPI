@@ -7,3 +7,5 @@ Tue Sep 03 2024 18:16:30 GMT-0700 (Pacific Daylight Time) - Requested index
 Tue Sep 03 2024 18:16:31 GMT-0700 (Pacific Daylight Time) - Requested documentation
 Tue Sep 03 2024 18:16:31 GMT-0700 (Pacific Daylight Time) - Requested index
 Tue Sep 03 2024 18:16:34 GMT-0700 (Pacific Daylight Time) - Requested index
+::1 - - [05/Sep/2024:23:36:08 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
+::1 - - [05/Sep/2024:23:36:10 +0000] "GET /secreturl HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
