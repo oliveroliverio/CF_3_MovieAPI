@@ -16,3 +16,4 @@ Tue Sep 03 2024 18:16:34 GMT-0700 (Pacific Daylight Time) - Requested index
 ::1 - - [12/Sep/2024:00:30:46 +0000] "GET /documentation.html HTTP/1.1" 304 -
 ::1 - - [12/Sep/2024:00:30:46 +0000] "GET /style.css HTTP/1.1" 404 148
 ::1 - - [12/Sep/2024:17:26:46 +0000] "GET /style.css HTTP/1.1" 404 148
+::1 - - [12/Sep/2024:22:25:59 +0000] "GET /movies HTTP/1.1" 200 3670
