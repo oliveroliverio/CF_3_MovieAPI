@@ -4,8 +4,8 @@ const express = require('express'),
 	path = require('path')
 const app = express()
 
-// array of top sci-fi movies with title and director.  Limit to 10
-let topMovies = [
+// array of movies with title and director.
+let movies = [
 	{
 		title: 'Blade Runner',
 		director: 'Ridley Scott',
@@ -190,6 +190,24 @@ let topMovies = [
 	},
 ]
 
+// array of users with username, password, and array of favorite movies.
+let users = [
+	{
+		username: 'user1',
+		password: 'password1',
+		favoriteMovies: ['Blade Runner', 'The Matrix', 'Inception'],
+	},
+	{
+		username: 'user2',
+		password: 'password2',
+		favoriteMovies: [
+			'Star Wars: Episode IV - A New Hope',
+			'The Terminator',
+			'2001: A Space Odyssey',
+		],
+	},
+]
+
 // GET requests
 app.get('/', (req, res) => {
 	res.send('Welcome to my movie api!')
@@ -249,3 +267,10 @@ app.get('/movies/:title/director', (req, res) => {
 })
 
 // return director data by director name
+app.get('/directors/:name', (req, res) => {
+	res.json(
+		topMovies.find((movie) => {
+			return movie.director === req.params.name
+		}).director_info
+	)
+})
