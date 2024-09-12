@@ -1,4 +1,7 @@
-const express = require('express')
+const express = require('express'),
+	morgan = require('morgan'),
+	fs = require('fs'), // import built in node modules fs and path
+	path = require('path')
 const app = express()
 
 // array of top sci-fi movies with title and director.  Limit to 10
@@ -19,7 +22,15 @@ let topMovies = [
 app.get('/', (req, res) => {
 	res.send('Welcome to my movie api!')
 })
+// create a write stream (in append mode)
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
+	flags: 'a',
+})
 
+// setup the logger
+app.use(morgan('common', { stream: accessLogStream }))
+
+// serve documentation.html from public folder
 app.use(express.static('public'))
 
 app.get('/movies', (req, res) => {
