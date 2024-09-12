@@ -24,8 +24,8 @@ app.get('/documentation', (req, res) => {
 	res.sendFile('/documentation.html', { root: __dirname })
 })
 
-app.get('/books', (req, res) => {
-	res.json(topBooks)
+app.get('/movies', (req, res) => {
+	res.json(topMovies)
 })
 
 // listen for requests
