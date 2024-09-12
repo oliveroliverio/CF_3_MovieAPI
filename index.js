@@ -33,6 +33,7 @@ app.use(morgan('common', { stream: accessLogStream }))
 // serve documentation.html from public folder
 app.use(express.static('public'))
 
+// get all movies
 app.get('/movies', (req, res) => {
 	res.json(topMovies)
 })

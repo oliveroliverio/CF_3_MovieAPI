@@ -53,6 +53,9 @@ app.get('/students/:name', (req, res) => {
 	)
 })
 
+// serve documentation.html from public folder
+app.use(express.static('public'))
+
 // Adds data for a new student to our list of students.
 app.post('/students', (req, res) => {
 	let newStudent = req.body
