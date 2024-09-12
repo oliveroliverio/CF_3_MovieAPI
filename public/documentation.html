@@ -6,15 +6,240 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1.0"
 		/>
-		<title>Documentation</title>
-		<link
-			rel="stylesheet"
-			type="text/css"
-			href="style.css"
-		/>
+		<title>API Documentation for server2.js</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				line-height: 1.6;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 20px;
+			}
+			th,
+			td {
+				border: 1px solid #ddd;
+				padding: 8px;
+			}
+			th {
+				background-color: #f2f2f2;
+			}
+			code {
+				background-color: #f9f9f9;
+				padding: 2px 4px;
+				border-radius: 4px;
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Documentation!</h1>
-		<p>This is a test documentation page</p>
+		<h1>API Documentation for server2.js</h1>
+
+		<h2>Table of Contents</h2>
+		<ol>
+			<li><a href="#get-all-movies">Get All Movies</a></li>
+			<li><a href="#get-movie-by-title">Get Movie by Title</a></li>
+			<li><a href="#add-a-new-movie">Add a New Movie</a></li>
+			<li><a href="#update-movie-by-title">Update Movie by Title</a></li>
+			<li><a href="#delete-movie-by-title">Delete Movie by Title</a></li>
+		</ol>
+
+		<h2 id="get-all-movies">Get All Movies</h2>
+		<table>
+			<tr>
+				<th>Description</th>
+				<td>Returns a list of all movies.</td>
+			</tr>
+			<tr>
+				<th>URL</th>
+				<td><code>/movies</code></td>
+			</tr>
+			<tr>
+				<th>Method</th>
+				<td>GET</td>
+			</tr>
+			<tr>
+				<th>Query Params</th>
+				<td>None</td>
+			</tr>
+			<tr>
+				<th>Request Body</th>
+				<td>None</td>
+			</tr>
+			<tr>
+				<th>Response</th>
+				<td>JSON array of movie objects</td>
+			</tr>
+		</table>
+		<h3>Example Request</h3>
+		<pre><code>GET /movies HTTP/1.1
+Host: localhost:8080</code></pre>
+		<h3>Example Response</h3>
+		<pre><code>[
+  {
+    "title": "Blade Runner",
+    "director": "Ridley Scott"
+  },
+  {
+    "title": "The Matrix",
+    "director": "Lana Wachowski, Lilly Wachowski"
+  }
+]</code></pre>
+
+		<h2 id="get-movie-by-title">Get Movie by Title</h2>
+		<table>
+			<tr>
+				<th>Description</th>
+				<td>Returns details of a specific movie by title.</td>
+			</tr>
+			<tr>
+				<th>URL</th>
+				<td><code>/movies/:title</code></td>
+			</tr>
+			<tr>
+				<th>Method</th>
+				<td>GET</td>
+			</tr>
+			<tr>
+				<th>Query Params</th>
+				<td><code>title</code> (string)</td>
+			</tr>
+			<tr>
+				<th>Request Body</th>
+				<td>None</td>
+			</tr>
+			<tr>
+				<th>Response</th>
+				<td>JSON object of the movie</td>
+			</tr>
+		</table>
+		<h3>Example Request</h3>
+		<pre><code>GET /movies/Blade%20Runner HTTP/1.1
+Host: localhost:8080</code></pre>
+		<h3>Example Response</h3>
+		<pre><code>{
+  "title": "Blade Runner",
+  "director": "Ridley Scott"
+}</code></pre>
+
+		<h2 id="add-a-new-movie">Add a New Movie</h2>
+		<table>
+			<tr>
+				<th>Description</th>
+				<td>Adds a new movie to the list.</td>
+			</tr>
+			<tr>
+				<th>URL</th>
+				<td><code>/movies</code></td>
+			</tr>
+			<tr>
+				<th>Method</th>
+				<td>POST</td>
+			</tr>
+			<tr>
+				<th>Query Params</th>
+				<td>None</td>
+			</tr>
+			<tr>
+				<th>Request Body</th>
+				<td>JSON object of the new movie</td>
+			</tr>
+			<tr>
+				<th>Response</th>
+				<td>JSON object of the added movie</td>
+			</tr>
+		</table>
+		<h3>Example Request</h3>
+		<pre><code>POST /movies HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "title": "Inception",
+  "director": "Christopher Nolan"
+}</code></pre>
+		<h3>Example Response</h3>
+		<pre><code>{
+  "title": "Inception",
+  "director": "Christopher Nolan"
+}</code></pre>
+
+		<h2 id="update-movie-by-title">Update Movie by Title</h2>
+		<table>
+			<tr>
+				<th>Description</th>
+				<td>Updates details of a specific movie by title.</td>
+			</tr>
+			<tr>
+				<th>URL</th>
+				<td><code>/movies/:title</code></td>
+			</tr>
+			<tr>
+				<th>Method</th>
+				<td>PUT</td>
+			</tr>
+			<tr>
+				<th>Query Params</th>
+				<td><code>title</code> (string)</td>
+			</tr>
+			<tr>
+				<th>Request Body</th>
+				<td>JSON object of the updated movie</td>
+			</tr>
+			<tr>
+				<th>Response</th>
+				<td>JSON object of the updated movie</td>
+			</tr>
+		</table>
+		<h3>Example Request</h3>
+		<pre><code>PUT /movies/Blade%20Runner HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "title": "Blade Runner",
+  "director": "Ridley Scott"
+}</code></pre>
+		<h3>Example Response</h3>
+		<pre><code>{
+  "title": "Blade Runner",
+  "director": "Ridley Scott"
+}</code></pre>
+
+		<h2 id="delete-movie-by-title">Delete Movie by Title</h2>
+		<table>
+			<tr>
+				<th>Description</th>
+				<td>Deletes a specific movie by title.</td>
+			</tr>
+			<tr>
+				<th>URL</th>
+				<td><code>/movies/:title</code></td>
+			</tr>
+			<tr>
+				<th>Method</th>
+				<td>DELETE</td>
+			</tr>
+			<tr>
+				<th>Query Params</th>
+				<td><code>title</code> (string)</td>
+			</tr>
+			<tr>
+				<th>Request Body</th>
+				<td>None</td>
+			</tr>
+			<tr>
+				<th>Response</th>
+				<td>JSON object of the deleted movie</td>
+			</tr>
+		</table>
+		<h3>Example Request</h3>
+		<pre><code>DELETE /movies/Blade%20Runner HTTP/1.1
+Host: localhost:8080</code></pre>
+		<h3>Example Response</h3>
+		<pre><code>{
+  "title": "Blade Runner",
+  "director": "Ridley Scott"
+}</code></pre>
 	</body>
 </html>
