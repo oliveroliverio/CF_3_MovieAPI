@@ -57,3 +57,12 @@ Tue Sep 03 2024 18:16:34 GMT-0700 (Pacific Daylight Time) - Requested index
 ::1 - - [13/Sep/2024:22:56:42 +0000] "GET /movies/ HTTP/1.1" 200 8705
 ::1 - - [13/Sep/2024:22:57:03 +0000] "GET /movies/genres HTTP/1.1" 200 132
 ::1 - - [13/Sep/2024:22:57:20 +0000] "GET /movies/The%20Shining HTTP/1.1" 200 630
+::1 - - [13/Sep/2024:22:58:13 +0000] "GET /movies/genres/Horror HTTP/1.1" 500 1524
+::1 - - [13/Sep/2024:22:58:26 +0000] "GET /movies/genres/horror HTTP/1.1" 500 1524
+::1 - - [13/Sep/2024:22:58:32 +0000] "GET /movies/genres/Sci-Fi HTTP/1.1" 500 1524
+::1 - - [13/Sep/2024:22:59:11 +0000] "GET /movies/genres/horror HTTP/1.1" 500 1524
+::1 - - [13/Sep/2024:22:59:15 +0000] "GET /movies/genres/Horror HTTP/1.1" 500 1524
+::1 - - [13/Sep/2024:23:00:37 +0000] "GET /movies/genres/Horror HTTP/1.1" 500 1524
+::1 - - [13/Sep/2024:23:00:39 +0000] "GET /movies/genres/ HTTP/1.1" 200 132
+::1 - - [13/Sep/2024:23:00:45 +0000] "GET /movies/genres/Horror HTTP/1.1" 500 1524
+::1 - - [13/Sep/2024:23:01:19 +0000] "GET /movies/genres/Horror HTTP/1.1" 200 104

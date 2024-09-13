@@ -293,10 +293,20 @@ app.listen(8080, () => {
 
 // return a list of available genres
 app.get('/movies/genres', (req, res) => {
-	console.log('Movies array:', movies) // Debugging: log the movies array
 	let genres = movies.map((movie) => movie.genre.name)
-	console.log('Genres array:', genres) // Debugging: log the genres array
 	res.status(200).json(genres)
+})
+
+// return a particular genre by genre name
+app.get('/movies/genres/:genreName', (req, res) => {
+	let { genreName } = req.params
+	let genre = movies.find((movie) => movie.genre.name === genreName).genre
+
+	if (genre) {
+		return res.status(200).json(genre)
+	} else {
+		res.status(400).send('Genre not found')
+	}
 })
 
 // return data for a single movie by title
@@ -308,18 +318,6 @@ app.get('/movies/:title', (req, res) => {
 		return res.status(200).json(movie)
 	} else {
 		res.status(400).send('Movie not found')
-	}
-})
-
-// return a particular genre by genre name
-app.get('/movies/genres/:name', (req, res) => {
-	let { genreName } = req.params
-	let genre = movies.find((movie) => movie.genre.name === genreName).genre
-
-	if (genre) {
-		return res.status(200).json(genre)
-	} else {
-		res.status(400).send('Genre not found')
 	}
 })
 
