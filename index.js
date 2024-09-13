@@ -5,7 +5,7 @@ const express = require('express'),
 const app = express()
 
 // array of movies with title and director.
-let topMovies = [
+let movies = [
 	{
 		title: 'Blade Runner',
 		director: 'Ridley Scott',
@@ -260,10 +260,6 @@ let users = [
 	},
 ]
 
-// GET requests
-app.get('/', (req, res) => {
-	res.send('Welcome to my movie api!')
-})
 // create a write stream (in append mode)
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
 	flags: 'a',
@@ -274,6 +270,10 @@ app.use(morgan('common', { stream: accessLogStream }))
 
 // serve documentation.html from public folder
 app.use(express.static('public'))
+
+app.get('/', (req, res) => {
+	res.sendFile(__dirname + '/index.html')
+})
 
 // get all movies
 app.get('/movies', (req, res) => {
@@ -291,6 +291,14 @@ app.listen(8080, () => {
 	console.log('Your app is listening on port 8080.')
 })
 
+// return a list of available genres
+app.get('/movies/genres', (req, res) => {
+	console.log('Movies array:', movies) // Debugging: log the movies array
+	let genres = movies.map((movie) => movie.genre.name)
+	console.log('Genres array:', genres) // Debugging: log the genres array
+	res.status(200).json(genres)
+})
+
 // return data for a single movie by title
 app.get('/movies/:title', (req, res) => {
 	let { title } = req.params
@@ -300,6 +308,18 @@ app.get('/movies/:title', (req, res) => {
 		return res.status(200).json(movie)
 	} else {
 		res.status(400).send('Movie not found')
+	}
+})
+
+// return a particular genre by genre name
+app.get('/movies/genres/:name', (req, res) => {
+	let { genreName } = req.params
+	let genre = movies.find((movie) => movie.genre.name === genreName).genre
+
+	if (genre) {
+		return res.status(200).json(genre)
+	} else {
+		res.status(400).send('Genre not found')
 	}
 })
 
