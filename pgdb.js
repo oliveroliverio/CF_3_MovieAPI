@@ -6,7 +6,7 @@ const client = new Client({
 	host: 'localhost',
 	port: 5432,
 	user: 'postgres',
-	password: 'coolman2341!',
+	password: '',
 	database: 'myFlixDB',
 })
 
