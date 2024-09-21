@@ -193,5 +193,20 @@
             "birth_year": 1967,
             "death_year": null
         }
+    },
+    {
+        "title": "Inception",
+        "director": "Christopher Nolan",
+        "genre": {
+            "name": "Science Fiction",
+            "description": "Science fiction films are often speculative in nature and explore futuristic concepts, advanced technology, space exploration, time travel, and extraterrestrial life."
+        },
+        "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+        "img_url": "/public/img/inception.jpg",
+        "director_info": {
+            "biography": "Christopher Nolan is a British-American film director, producer, and screenwriter, known for his distinctive storytelling and visual style.",
+            "birth_year": 1970,
+            "death_year": null
+        }
     }
 ]

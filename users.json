@@ -1,0 +1,72 @@
+[
+  {
+    "username": "johndoe",
+    "userid": "1",
+    "password": "password123",
+    "email": "johndoe@example.com",
+    "birthday": "1990-01-01"
+  },
+  {
+    "username": "janedoe",
+    "userid": "2",
+    "password": "password456",
+    "email": "janedoe@example.com",
+    "birthday": "1992-02-02"
+  },
+  {
+    "username": "alice",
+    "userid": "3",
+    "password": "password789",
+    "email": "alice@example.com",
+    "birthday": "1985-03-03"
+  },
+  {
+    "username": "bob",
+    "userid": "4",
+    "password": "password101",
+    "email": "bob@example.com",
+    "birthday": "1988-04-04"
+  },
+  {
+    "username": "charlie",
+    "userid": "5",
+    "password": "password202",
+    "email": "charlie@example.com",
+    "birthday": "1995-05-05"
+  },
+  {
+    "username": "david",
+    "userid": "6",
+    "password": "password303",
+    "email": "david@example.com",
+    "birthday": "1993-06-06"
+  },
+  {
+    "username": "eve",
+    "userid": "7",
+    "password": "password404",
+    "email": "eve@example.com",
+    "birthday": "1991-07-07"
+  },
+  {
+    "username": "frank",
+    "userid": "8",
+    "password": "password505",
+    "email": "frank@example.com",
+    "birthday": "1987-08-08"
+  },
+  {
+    "username": "grace",
+    "userid": "9",
+    "password": "password606",
+    "email": "grace@example.com",
+    "birthday": "1994-09-09"
+  },
+  {
+    "username": "heidi",
+    "userid": "10",
+    "password": "password707",
+    "email": "heidi@example.com",
+    "birthday": "1996-10-10"
+  }
+]
