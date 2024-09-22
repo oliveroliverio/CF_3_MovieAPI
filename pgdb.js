@@ -6,7 +6,7 @@ const client = new Client({
 	host: 'localhost',
 	port: 5432,
 	user: 'postgres',
-	password: 'coolman2341!',
+	password: 'password1!',
 	database: 'myFlixDB',
 })
 
@@ -50,25 +50,30 @@ const updateMovies = (movies) => {
 const createTables = () => {
 	client.query(
 		`CREATE TABLE IF NOT EXISTS movies (
-            movieid SERIAL PRIMARY KEY,
-            title VARCHAR(100) NOT NULL,
+            movieid UUID PRIMARY KEY,
+            title VARCHAR(100) NOT NULL UNIQUE,
             description TEXT NOT NULL,
             genre VARCHAR(100) NOT NULL,
-            director VARCHAR(100) NOT NULL
+            director VARCHAR(100) NOT NULL,
+            directorid UUID NOT NULL,
+            CONSTRAINT fk_director
+                FOREIGN KEY(directorid)
+                REFERENCES directors(directorid)
         )`,
 		(err, res) => {
 			if (!err) {
 				console.log(res)
 			} else {
 				console.error(err)
+				console.log('Error creating movies table')
 			}
 		}
 	)
 
 	client.query(
 		`CREATE TABLE IF NOT EXISTS directors (
-            directorid SERIAL PRIMARY KEY,
-            name VARCHAR(100) NOT NULL,
+            directorid UUID PRIMARY KEY,
+            name VARCHAR(100) NOT NULL UNIQUE,
             bio TEXT NOT NULL,
             birthyear INTEGER NOT NULL,
             deathyear INTEGER
@@ -78,14 +83,15 @@ const createTables = () => {
 				console.log(res)
 			} else {
 				console.error(err)
+				console.log('Error creating directors table')
 			}
 		}
 	)
 
 	client.query(
 		`CREATE TABLE IF NOT EXISTS genres (
-            genreid SERIAL PRIMARY KEY,
-            name VARCHAR(100) NOT NULL,
+            genreid UUID PRIMARY KEY,
+            name VARCHAR(100) NOT NULL UNIQUE,
             description TEXT NOT NULL
         )`,
 		(err, res) => {
@@ -93,29 +99,38 @@ const createTables = () => {
 				console.log(res)
 			} else {
 				console.error(err)
+				console.log('Error creating genres table')
 			}
 		}
 	)
 
 	client.query(
 		`CREATE TABLE IF NOT EXISTS users_movies (
-            id SERIAL PRIMARY KEY,
-            userid VARCHAR(100) NOT NULL,
-            movieid INTEGER NOT NULL
+            id UUID PRIMARY KEY,
+            userid UUID NOT NULL,
+            movieid UUID NOT NULL,
+            CONSTRAINT fk_user
+                FOREIGN KEY(userid)
+                REFERENCES users(userid),
+            CONSTRAINT fk_movie
+                FOREIGN KEY(movieid)
+                REFERENCES movies(movieid)
         )`,
 		(err, res) => {
 			if (!err) {
 				console.log(res)
 			} else {
 				console.error(err)
+				console.log('Error creating users_movies table')
 			}
 		}
 	)
-	// create uers table
+
+	// create users table
 	client.query(
 		`CREATE TABLE IF NOT EXISTS users (
-            userid SERIAL PRIMARY KEY,
-            username VARCHAR(100) NOT NULL,
+            userid UUID PRIMARY KEY,
+            username VARCHAR(100) NOT NULL UNIQUE,
             password VARCHAR(100) NOT NULL,
             email VARCHAR(100) NOT NULL,
             birthday DATE
@@ -125,20 +140,29 @@ const createTables = () => {
 				console.log(res)
 			} else {
 				console.error(err)
+				console.log('Error creating users table')
 			}
 		}
 	)
 }
 
-// add new movies from movies.json to myFlixDB (skipping duplicates already in db)
-const addNewMovies = (movies) => {
+// createTables()
+
+// populate movies table with data from movies.json
+const populateMoviesTable = (movies) => {
 	movies.forEach((movie) => {
 		client.query(
-			`INSERT INTO movies (title, description, genre, director)
-             VALUES ($1, $2, $3, $4)
-             ON CONFLICT (title)
-             DO NOTHING`,
-			[movie.title, movie.description, movie.genre.name, movie.director],
+			`INSERT INTO movies (movieid, title, description, genre, director)
+			 VALUES ($1, $2, $3, $4, $5)
+			 ON CONFLICT (title)
+			 DO NOTHING`,
+			[
+				uuidv4(),
+				movie.title,
+				movie.description,
+				movie.genre.name,
+				movie.director,
+			],
 			(err, res) => {
 				if (!err) {
 					console.log(res.rows)
@@ -150,17 +174,20 @@ const addNewMovies = (movies) => {
 	})
 }
 
+// populateMoviesTable(movies)
+
 //------------------------------other functions-----------------------
 
 // update the directors table with data from movies.json
-const updateDirectorsTable = (movies) => {
+const populateDirectorsTable = (movies) => {
 	movies.forEach((movie) => {
 		client.query(
-			`INSERT INTO directors (name, bio, birthyear, deathyear)
-             VALUES ($1, $2, $3, $4)
-             ON CONFLICT (name)
+			`INSERT INTO directors (directorid, name, bio, birthyear, deathyear)
+             VALUES ($1, $2, $3, $4, $5)
+             ON CONFLICT (directorid)
              DO UPDATE SET bio = EXCLUDED.bio, birthyear = EXCLUDED.birthyear, deathyear = EXCLUDED.deathyear`,
 			[
+				uuidv4(), // Generate a new UUID for directorid
 				movie.director,
 				movie.director_info.biography,
 				movie.director_info.birth_year,
@@ -177,39 +204,17 @@ const updateDirectorsTable = (movies) => {
 	})
 }
 
-// add genre function that adds genre name, description, and genreid (integer)
-const addActionGenre = () => {
-	let genre = {
-		name: 'Action',
-		description:
-			'Action movies are characterized by physical action, including fighting, chases, and explosions.',
-		genreid: 4,
-	}
-	client.query(
-		`INSERT INTO genres (name, description, genreid)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (name)
-         DO NOTHING`,
-		[genre.name, genre.description, genre.genreid],
-		(err, res) => {
-			if (!err) {
-				console.log(res.rows)
-			} else {
-				console.error(err)
-			}
-		}
-	)
-}
+// populateDirectorsTable(movies)
 
-// populate users table with data from users.json
-const addUsersFromJsonFile = () => {
-	users.forEach((user) => {
+// populate genres table with data from movies.json
+const populateGenresTable = (movies) => {
+	movies.forEach((movie) => {
 		client.query(
-			`INSERT INTO users (username, password, email, birthday)
-             VALUES ($1, $2, $3, $4)
-             ON CONFLICT (username)
-             DO NOTHING`,
-			[user.username, user.password, user.email, user.birthday],
+			`INSERT INTO genres (genreid, name, description)
+			 VALUES ($1, $2, $3)
+			 ON CONFLICT (name)
+			 DO NOTHING`,
+			[uuidv4(), movie.genre.name, movie.genre.description],
 			(err, res) => {
 				if (!err) {
 					console.log(res.rows)
@@ -220,6 +225,58 @@ const addUsersFromJsonFile = () => {
 		)
 	})
 }
+
+// populateGenresTable(movies)
+
+// add genre function that adds genre name, description, and genreid (integer)
+const addActionGenre = () => {
+	let genre = {
+		name: 'Action',
+		description:
+			'Action movies are characterized by physical action, including fighting, chases, and explosions.',
+		genreid: uuidv4(),
+	}
+	client.query(
+		`INSERT INTO genres (name, description, genreid)
+         VALUES ($1, $2, $3)
+         ON CONFLICT (name)
+         DO NOTHING`,
+		[genre.name, genre.description, genre.genreid],
+		(err, res) => {
+			if (!err) {
+				console.log(res.rows)
+				console.log('Action genre added successfully')
+			} else {
+				console.error(err)
+			}
+		}
+	)
+}
+
+// addActionGenre()
+
+// populate users table with data from users.json
+const populateUsersTable = () => {
+	users.forEach((user) => {
+		client.query(
+			`INSERT INTO users (userid, username, password, email, birthday)
+             VALUES ($1, $2, $3, $4, $5)
+             ON CONFLICT (username)
+             DO NOTHING`,
+			[uuidv4(), user.username, user.password, user.email, user.birthday],
+			(err, res) => {
+				if (!err) {
+					console.log(res.rows)
+					console.log('Users added successfully')
+				} else {
+					console.error(err)
+				}
+			}
+		)
+	})
+}
+
+populateUsersTable()
 
 //---------------------Part 2----------------
 

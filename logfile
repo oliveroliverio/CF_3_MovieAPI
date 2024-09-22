@@ -1,0 +1,5 @@
+2024-09-22 15:13:36.804 PDT [58892] LOG:  starting PostgreSQL 16.4 (Homebrew) on aarch64-apple-darwin23.4.0, compiled by Apple clang version 15.0.0 (clang-1500.3.9.4), 64-bit
+2024-09-22 15:13:36.805 PDT [58892] LOG:  listening on IPv6 address "::1", port 5432
+2024-09-22 15:13:36.806 PDT [58892] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2024-09-22 15:13:36.806 PDT [58892] FATAL:  could not open lock file "/tmp/.s.PGSQL.5432.lock": Permission denied
+2024-09-22 15:13:36.806 PDT [58892] LOG:  database system is shut down
