@@ -276,7 +276,66 @@ const populateUsersTable = () => {
 	})
 }
 
-populateUsersTable()
+// populateUsersTable()
+
+// select all users from the users table and store into array "usersArray"
+let usersArray = []
+client.query(`SELECT * FROM users`, (err, res) => {
+	if (!err) {
+		usersArray = res.rows
+		// console log only the userid part of the usersArray
+		console.log(usersArray.map((user) => user.userid))
+	} else {
+		console.error(err)
+	}
+})
+
+// Function to populate the users_movies table
+const populateUsersMoviesTable = () => {
+	// Fetch users from the users table
+	client.query(`SELECT * FROM users`, (err, userRes) => {
+		if (err) {
+			console.error('Error fetching users:', err)
+			return
+		}
+
+		const users = userRes.rows
+
+		// Fetch movies from the movies table
+		client.query(`SELECT * FROM movies`, (err, movieRes) => {
+			if (err) {
+				console.error('Error fetching movies:', err)
+				return
+			}
+
+			const movies = movieRes.rows
+
+			// Populate users_movies table with userid and movieid from both the users and movies table
+			users.forEach((user) => {
+				movies.forEach((movie) => {
+					client.query(
+						`INSERT INTO users_movies (id, userid, movieid)
+                         VALUES ($1, $2, $3)
+                         ON CONFLICT (id)
+                         DO NOTHING`,
+						[uuidv4(), user.userid, movie.movieid],
+						(err, res) => {
+							if (!err) {
+								console.log(
+									`Inserted user_movie: ${user.userid} - ${movie.movieid}`
+								)
+							} else {
+								console.error(err)
+							}
+						}
+					)
+				})
+			})
+		})
+	})
+}
+
+populateUsersMoviesTable()
 
 //---------------------Part 2----------------
 
