@@ -335,7 +335,26 @@ const populateUsersMoviesTable = () => {
 	})
 }
 
-populateUsersMoviesTable()
+// populateUsersMoviesTable()
+
+// function to create a view that aggregates the movie titles for each director:
+const createViewDirectorMovies = () => {
+	client.query(
+		`CREATE VIEW director_movies AS
+		SELECT d.directorid, d.name, d.bio, d.birthyear, d.deathyear, array_agg(m.title) AS movies
+		FROM directors d
+		LEFT JOIN movies m ON d.directorid = m.directorid
+		GROUP BY d.directorid;`,
+		(err, res) => {
+			if (!err) {
+				console.log(res)
+				console.log('View created successfully')
+			} else {
+				console.error(err)
+			}
+		}
+	)
+}
 
 //---------------------Part 2----------------
 
