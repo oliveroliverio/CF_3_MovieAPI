@@ -356,6 +356,8 @@ const createViewDirectorMovies = () => {
 	)
 }
 
+createViewDirectorMovies()
+
 //---------------------Part 2----------------
 
 const getGenreID = (genre) => {
