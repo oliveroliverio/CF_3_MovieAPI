@@ -33,6 +33,10 @@ To get started, the JavaScript syntax for creating a new collection in MongoDB i
 `db.createCollection("collectionName")`
 `db.createCollection("movies")`
 
+To rename a collection
+`db.currentCollectionName.renameCollection("newCollectionName")`
+`db.movies.renameCollection("Movies")`
+
 The JavaScript syntax for inserting a new document into a collection is:
 `db.[collectionName].insertOne(document-to-insert)`
 
@@ -70,6 +74,7 @@ db.someRandomTable.insertOne(someRandomObject)
 
 To read all documents from a certain collection, use the command:
 `db.[collectionName].find()`
+`db.movies.find()`
 
 Reading with Conditions
 In the previous Exercise, you used a WHERE clause to specify that you wanted to extract a record for which only certain conditions were true (e.g., all movies with the “Thriller” genre). In MongoDB, you can do this in a similar fashion; only, instead of a WHERE clause, you use a find() function. Take a look at the following two syntaxes:
