@@ -348,7 +348,6 @@ const getMoviesByGenreAndDirector = async (genre, director) => {
 
 // UPDATE query function that replaces description of a movie
 // Arguments: (title, new description)
-// be sure to print old description and new description
 
 const updateDescription = async (title, newDescription) => {
 	try {
@@ -390,7 +389,6 @@ const updateDescription = async (title, newDescription) => {
 // UPDATE query function that updates the director biography of multiple movies
 // by that director.
 // Arguments: (director, new bio)
-// be sure to print old bio and new bio
 
 const updateDirectorBio = async (director, newBio) => {
 	try {
@@ -431,7 +429,6 @@ const updateDirectorBio = async (director, newBio) => {
 
 // UPDATE query function that adds a movie to a users favorites array
 // Arguments: (username, movie title)
-// be sure to print the updated favorites array
 
 const addNewFavoriteMovieToUser = async (username, title) => {
 	try {
@@ -471,4 +468,31 @@ const addNewFavoriteMovieToUser = async (username, title) => {
 	}
 }
 
-addNewFavoriteMovieToUser('eve', 'The Matrix')
+// addNewFavoriteMovieToUser('eve', 'The Matrix')
+
+// DELETE query to delete entire user from users collection
+// Arguments: (username)
+const deleteUser = async (username) => {
+	try {
+		// Connect to the MongoDB server
+		await client.connect()
+		console.log('Connected successfully to MongoDB server')
+
+		// Get the database
+		const db = client.db(dbName)
+
+		// Get the users collection
+		const usersCollection = db.collection('users')
+
+		// Delete the user
+		await usersCollection.deleteOne({ username: username })
+
+		console.log(`Deleted ${username}`)
+	} catch (err) {
+		console.error('Error deleting user:', err)
+	} finally {
+		// Close the connection
+		await client.close()
+	}
+}
+deleteUser('eve')
