@@ -2,7 +2,7 @@
 Install MongoDB community
 `brew tap mongodb/brew`
 `brew install mongodb-community.`
-  
+
 Run
 `brew services start mongodb-community`
 
@@ -155,3 +155,10 @@ For instance, if you wanted to delete all movie documents from your “movies”
 
 Again, similar to the find() example, this query isn’t the same as
 `db.movies.deleteMany({ Genre: { Name: "Comedy" } })`
+
+# Export db
+
+`mongoexport -d name_of_database -c name_of_collection -o name_of_file.json`
+
+`mongoexport -d myFlixMongoDB -c movies -o movies.json`
+`mongoexport -d myFlixMongoDB -c users -o users.json`
