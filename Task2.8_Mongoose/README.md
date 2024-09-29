@@ -36,3 +36,16 @@ module.exports.User = User;
 ```
 
 
+Go to `index.js` add these lines
+```js
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+})
+```

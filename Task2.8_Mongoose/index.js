@@ -1,113 +1,58 @@
+//-----------------------------Setup-------------------------------
+const mongoose = require('mongoose')
+const Models = require('./models.js')
+
+const Movies = Models.Movie
+const Users = Models.User
+
 const express = require('express'),
 	morgan = require('morgan'),
 	fs = require('fs'), // import built in node modules fs and path
 	path = require('path'),
 	app = express()
 
+mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+})
+
+// create a write stream (in append mode)
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
+	flags: 'a',
+})
+
+// setup the logger
+app.use(morgan('common', { stream: accessLogStream }))
+// needed for body-parser
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+// serve documentation.html from public folder
+app.use(express.static('public'))
+
+// listen for requests
+app.listen(8080, () => {
+	console.log('Your app is listening on port 8080.')
+})
+
 // Import Swagger setup
 require('./api-docs')(app)
 
-/**
- * @swagger
- * /:
- *   get:
- *     summary: Serve the index.html file
- *     responses:
- *       200:
- *         description: The HTML file
- *         content:
- *           text/html:
- *             schema:
- *               type: string
- */
+// ----------------------------------Begin API Logic----------------------------------
+
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/index.html')
 })
 
-// get all movies
-/**
- * @swagger
- * components:
- *   schemas:
- *     Movie:
- *       type: object
- *       properties:
- *         title:
- *           type: string
- *         director:
- *           type: string
- *         genre:
- *           type: string
- *         year:
- *           type: integer
- */
-
-/**
- * @swagger
- * /movies:
- *   get:
- *     summary: Retrieve a list of movies
- *     responses:
- *       200:
- *         description: A list of movies
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Movie'
- */
 app.get('/movies', (req, res) => {
 	res.status(200).json(movies)
 })
 
-/**
- * @swagger
- * /movies/genres:
- *   get:
- *     summary: Retrieve a list of available genres
- *     responses:
- *       200:
- *         description: A list of genres
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: string
- */
 app.get('/movies/genres', (req, res) => {
 	let genres = movies.map((movie) => movie.genre.name)
 	res.status(200).json(genres)
 })
 
-/**
- * @swagger
- * /movies/genres/{genreName}:
- *   get:
- *     summary: Retrieve a particular genre by genre name
- *     parameters:
- *       - in: path
- *         name: genreName
- *         required: true
- *         schema:
- *           type: string
- *         description: The name of the genre
- *     responses:
- *       200:
- *         description: A genre object
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 name:
- *                   type: string
- *                 description:
- *                   type: string
- *       400:
- *         description: Genre not found
- */
 app.get('/movies/genres/:genreName', (req, res) => {
 	let { genreName } = req.params
 	let genre = movies.find((movie) => movie.genre.name === genreName).genre
@@ -119,37 +64,6 @@ app.get('/movies/genres/:genreName', (req, res) => {
 	}
 })
 
-/**
- * @swagger
- * /movies/{title}:
- *   get:
- *     summary: Retrieve data for a single movie by title
- *     parameters:
- *       - in: path
- *         name: title
- *         required: true
- *         schema:
- *           type: string
- *         description: The title of the movie
- *     responses:
- *       200:
- *         description: A movie object
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 title:
- *                   type: string
- *                 director:
- *                   type: string
- *                 genre:
- *                   type: string
- *                 year:
- *                   type: integer
- *       400:
- *         description: Movie not found
- */
 app.get('/movies/:title', (req, res) => {
 	let { title } = req.params
 	let movie = movies.find((movie) => movie.title === title)
@@ -161,33 +75,7 @@ app.get('/movies/:title', (req, res) => {
 	}
 })
 
-/**
- * @swagger
- * /movies/{title}/genre:
- *   get:
- *     summary: Retrieve genre data for a single movie by title
- *     parameters:
- *       - in: path
- *         name: title
- *         required: true
- *         schema:
- *           type: string
- *         description: The title of the movie
- *     responses:
- *       200:
- *         description: The genre of the movie
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 name:
- *                   type: string
- *                 description:
- *                   type: string
- *       404:
- *         description: Movie not found
- */
+
 app.get('/movies/:title/genre', (req, res) => {
 	let movie = movies.find((movie) => movie.title === req.params.title)
 	if (movie) {
@@ -301,46 +189,41 @@ app.get('/users', (req, res) => {
 	res.status(200).json(users)
 })
 
-// add a user with favorite movies
-/**
-
- * @swagger
- * /users:
- *   post:
- *     summary: Add a new user
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *               email:
- *                 type: string
- *               favoriteMovies:
- *                 type: array
- *                 items:
- *                   type: string
- *     responses:
- *       200:
- *         description: User added
- *       400:
- *         description: User already exists
- */
-app.post('/users', (req, res) => {
-	let newUser = req.body
-	if (users.find((user) => user.username === newUser.username)) {
-		res.status(400).send('User already exists')
-	} else {
-		users.push(newUser)
-		res.status(200).send('User added')
-	}
+//Add a user
+/* We’ll expect JSON in this format
+{
+  ID: Integer,
+  Username: String,
+  Password: String,
+  Email: String,
+  Birthday: Date
+}*/
+app.post('/users', async (req, res) => {
+	await Users.findOne({ Username: req.body.Username })
+		.then((user) => {
+			if (user) {
+				return res.status(400).send(req.body.Username + 'already exists')
+			} else {
+				Users.create({
+					Username: req.body.Username,
+					Password: req.body.Password,
+					Email: req.body.Email,
+					Birthday: req.body.Birthday,
+				})
+					.then((user) => {
+						res.status(201).json(user)
+					})
+					.catch((error) => {
+						console.error(error)
+						res.status(500).send('Error: ' + error)
+					})
+			}
+		})
+		.catch((error) => {
+			console.error(error)
+			res.status(500).send('Error: ' + error)
+		})
 })
-
 // get a user by username
 /**
  * @swagger
@@ -498,20 +381,4 @@ app.delete('/users/:username', (req, res) => {
 app.use((err, req, res, next) => {
 	console.error(err.stack)
 	res.status(500).send('Something broke!')
-})
-
-// create a write stream (in append mode)
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
-	flags: 'a',
-})
-
-// setup the logger
-app.use(morgan('common', { stream: accessLogStream }))
-
-// serve documentation.html from public folder
-app.use(express.static('public'))
-
-// listen for requests
-app.listen(8080, () => {
-	console.log('Your app is listening on port 8080.')
 })
