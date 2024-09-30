@@ -210,3 +210,5 @@ Tue Sep 03 2024 18:16:34 GMT-0700 (Pacific Daylight Time) - Requested index
 ::1 - - [30/Sep/2024:22:51:02 +0000] "GET /movies/ HTTP/1.1" 304 -
 ::1 - - [30/Sep/2024:22:52:12 +0000] "GET /directors/Ridley%20Scott HTTP/1.1" 200 123
 ::1 - - [30/Sep/2024:22:52:50 +0000] "GET /movies HTTP/1.1" 304 -
+::1 - - [30/Sep/2024:22:54:17 +0000] "GET /directors/Ridley%20Scott HTTP/1.1" 200 413
+::1 - - [30/Sep/2024:22:54:46 +0000] "GET /directors/Ridley%20Scott HTTP/1.1" 200 205

@@ -92,7 +92,7 @@ app.get('/movies/:title', async (req, res) => {
 app.get('/movies/:title/genre', async (req, res) => {
 	try {
 		let { title } = req.params
-		let genre = await Movies.find({ title: title }, 'genre')
+		let genre = await Movies.findOne({ title: title }, 'genre')
 		if (genre) {
 			return res.status(200).json(genre)
 		}
@@ -105,7 +105,7 @@ app.get('/movies/:title/genre', async (req, res) => {
 app.get('/movies/:title/director', async (req, res) => {
 	try {
 		let { title } = req.params
-		let director = await Movies.find({ title: title }, 'director')
+		let director = await Movies.findOne({ title: title }, 'director')
 		if (director) {
 			return res.json(director)
 		}
@@ -118,7 +118,7 @@ app.get('/movies/:title/director', async (req, res) => {
 app.get('/directors/:name', async (req, res) => {
 	try {
 		let { name } = req.params
-		let directorInfo = await Movies.find({ director: name }, 'director_info')
+		let directorInfo = await Movies.findOne({ director: name }, 'director_info')
 		if (directorInfo) {
 			return res.json(directorInfo)
 		}
@@ -129,35 +129,6 @@ app.get('/directors/:name', async (req, res) => {
 
 //------------------------------------------User Logic------------------------------------------
 
-/**
-/**
- * @swagger
- * /users:
- *   post:
- *     summary: Add a new user
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *               email:
- *                 type: string
- *               favoriteMovies:
- *                 type: array
- *                 items:
- *                   type: string
- *     responses:
- *       200:
- *         description: User added
- *       400:
- *         description: User already exists
- */
 app.get('/users', (req, res) => {
 	res.status(200).json(users)
 })
