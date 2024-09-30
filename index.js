@@ -76,49 +76,31 @@ app.get('/movies/genres/:genreName', async (req, res) => {
 app.get('/movies/:title', async (req, res) => {
 	try {
 		let { title } = req.params
-		let movie = Movies.find((movie) => movie.title === title)
+		let movie = await Movies.find({ title: title })
 
 		if (movie) {
 			return res.status(200).json(movie)
 		} else {
-			res.status(400).send('Movie not found')
+			res.status(400).send(`Movie, ${req.params.title} not found`)
 		}
 	} catch (err) {
 		console.error(err)
 	}
 })
 
-app.get('/movies/:title/genre', (req, res) => {
-	let movie = movies.find((movie) => movie.title === req.params.title)
-	if (movie) {
-		res.json(movie.genre)
-	} else {
-		res.status(404).send('Movie not found')
+// return the genre of a movie by title
+app.get('/movies/:title/genre', async (req, res) => {
+	try {
+		let { title } = req.params
+		let genre = await Movies.find({ title: title }, 'genre')
+		if (genre) {
+			return res.status(200).json(genre)
+		}
+	} catch (err) {
+		console.error(err)
 	}
 })
 
-/**
- * @swagger
- * /movies/{title}/director:
- *   get:
- *     summary: Retrieve director data for a single movie by title
- *     parameters:
- *       - in: path
- *         name: title
- *         required: true
- *         schema:
- *           type: string
- *         description: The title of the movie
- *     responses:
- *       200:
- *         description: The director of the movie
- *         content:
- *           application/json:
- *             schema:
- *               type: string
- *       404:
- *         description: Movie not found
- */
 app.get('/movies/:title/director', (req, res) => {
 	res.json(
 		movies.find((movie) => {
