@@ -49,12 +49,36 @@ app.get('/movies', (req, res) => {
 	Movies.find().then((movies) => res.json(movies))
 })
 
-app.get('/movies/genres', (req, res) => {
+app.get('/users', (req, res) => {
+	Users.find().then((users) => res.json(users))
+})
+
+app.get('/users/emails', (_, res) => {
+	Users.find()
+		.then((users) => {
+			console.log('Fetched users:', users) // Log the fetched users
+			let emails = users.map((user) => user.email)
+			console.log('Extracted emails:', emails) // Log the extracted emails
+			res.json(emails)
+		})
+		.catch((err) => {
+			console.error(err)
+			res.status(500).send('Error: ' + err)
+		})
+})
+app.get('/movies/genres', (_, res) => {
 	// using the Movies model and mongoose, console log all genres
-	Movies.find().then((movies) => {
-		let genres = movies.map((movie) => movie.genre.name)
-		res.json(genres)
-	})
+	Movies.find()
+		.then((movies) => {
+			let genres = movies
+				.filter((movie) => movie.genre) // ensure genre is defined
+				.map((movie) => movie.genre.name) // extract the genre name
+			res.json(genres)
+		})
+		.catch((err) => {
+			console.error(err)
+			res.status(500).send('Error: ' + err)
+		})
 })
 
 app.get('/movies/genres/:genreName', (req, res) => {
