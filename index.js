@@ -101,51 +101,30 @@ app.get('/movies/:title/genre', async (req, res) => {
 	}
 })
 
-app.get('/movies/:title/director', (req, res) => {
-	res.json(
-		movies.find((movie) => {
-			return movie.title === req.params.title
-		}).director
-	)
+// return the director of a movie by title
+app.get('/movies/:title/director', async (req, res) => {
+	try {
+		let { title } = req.params
+		let director = await Movies.find({ title: title }, 'director')
+		if (director) {
+			return res.json(director)
+		}
+	} catch (err) {
+		console.error(err)
+	}
 })
 
-/**
- * @swagger
- * /directors/{name}:
- *   get:
- *     summary: Retrieve director information by director name
- *     parameters:
- *       - in: path
- *         name: name
- *         required: true
- *         schema:
- *           type: string
- *         description: The name of the director
- *     responses:
- *       200:
- *         description: Director information
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 name:
- *                   type: string
- *                 bio:
- *                   type: string
- *                 birthdate:
- *                   type: string
- *                 nationality:
- *                   type: string
- *       404:
- *         description: Director not found
- */
-app.get('/directors/:name', (req, res) => {
-	res.json(
-		movies.find((movie) => {
-			return movie.director === req.params.name
-		}).director_info
-	)
+// return the bio of a director by name
+app.get('/directors/:name', async (req, res) => {
+	try {
+		let { name } = req.params
+		let directorInfo = await Movies.find({ director: name }, 'director_info')
+		if (directorInfo) {
+			return res.json(directorInfo)
+		}
+	} catch (err) {
+		console.error(err)
+	}
 })
 
 //------------------------------------------User Logic------------------------------------------
