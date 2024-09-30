@@ -25,7 +25,7 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
 app.use(morgan('common', { stream: accessLogStream }))
 // needed for body-parser
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+// app.use(express.urlencoded({ extended: true }))
 
 // serve documentation.html from public folder
 app.use(express.static('public'))
@@ -49,57 +49,42 @@ app.get('/movies', (req, res) => {
 	Movies.find().then((movies) => res.json(movies))
 })
 
-app.get('/users', (req, res) => {
-	Users.find().then((users) => res.json(users))
-})
-
-app.get('/users/emails', (_, res) => {
-	Users.find()
-		.then((users) => {
-			console.log('Fetched users:', users) // Log the fetched users
-			let emails = users.map((user) => user.email)
-			console.log('Extracted emails:', emails) // Log the extracted emails
-			res.json(emails)
-		})
-		.catch((err) => {
-			console.error(err)
-			res.status(500).send('Error: ' + err)
-		})
-})
-app.get('/movies/genres', (_, res) => {
+app.get('/movies/genres', async (_, res) => {
 	// using the Movies model and mongoose, console log all genres
-	Movies.find()
-		.then((movies) => {
-			let genres = movies
-				.filter((movie) => movie.genre) // ensure genre is defined
-				.map((movie) => movie.genre.name) // extract the genre name
-			res.json(genres)
-		})
-		.catch((err) => {
-			console.error(err)
-			res.status(500).send('Error: ' + err)
-		})
+	Movies.find().then((movies) => {
+		let genres = movies.map((movie) => movie.genre.name)
+		res.json(genres)
+	})
 })
 
-app.get('/movies/genres/:genreName', (req, res) => {
-	let { genreName } = req.params
-	let genre = movies.find((movie) => movie.genre.name === genreName).genre
+// returns all movies of a specific genre in json format
+app.get('/movies/genres/:genreName', async (req, res) => {
+	try {
+		let { genreName } = req.params
+		let genre = await Movies.find({ 'genre.name': genreName })
 
-	if (genre) {
-		return res.status(200).json(genre)
-	} else {
-		res.status(400).send('Genre not found')
+		if (genre.length > 0) {
+			return res.status(200).json(genre)
+		} else {
+			return res.status(400).send(`Genre, ${req.params.genreName} not found`)
+		}
+	} catch (err) {
+		console.error(err)
+		return res.status(500).send('Error: ' + err)
 	}
 })
+app.get('/movies/:title', async (req, res) => {
+	try {
+		let { title } = req.params
+		let movie = Movies.find((movie) => movie.title === title)
 
-app.get('/movies/:title', (req, res) => {
-	let { title } = req.params
-	let movie = movies.find((movie) => movie.title === title)
-
-	if (movie) {
-		return res.status(200).json(movie)
-	} else {
-		res.status(400).send('Movie not found')
+		if (movie) {
+			return res.status(200).json(movie)
+		} else {
+			res.status(400).send('Movie not found')
+		}
+	} catch (err) {
+		console.error(err)
 	}
 })
 
@@ -405,7 +390,7 @@ app.delete('/users/:username', (req, res) => {
 //------------------------------------------Error Handling------------------------------------------
 
 // Error-handling middleware
-app.use((err, req, res, next) => {
-	console.error(err.stack)
-	res.status(500).send('Something broke!')
-})
+// app.use((err, req, res, next) => {
+// 	console.error(err.stack)
+// 	res.status(500).send('Something broke!')
+// })
