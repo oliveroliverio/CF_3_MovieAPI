@@ -127,6 +127,28 @@ app.get('/directors/:name', async (req, res) => {
 	}
 })
 
+// add new movie to list of movies
+app.post('/movies', async (req, res) => {
+	try {
+		let newMovie = await Movies.create({
+			title: req.body.title,
+			description: req.body.description,
+			genre: req.body.genre,
+			director: req.body.director,
+			actors: req.body.actors,
+			ImagePath: req.body.ImagePath,
+			Featured: req.body.Featured,
+		})
+		// console log "new movie, ${movie.title} added"
+		console.log(`new movie, ${newMovie.title} added`)
+		res.status(201).json(newMovie)
+	} catch (err) {
+		console.error(err)
+	}
+})
+
+
+
 //------------------------------------------User Logic------------------------------------------
 
 app.get('/users', (req, res) => {
