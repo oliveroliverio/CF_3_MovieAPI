@@ -2,6 +2,9 @@
 const mongoose = require('mongoose')
 const Models = require('./models.js')
 const { user } = require('pg/lib/defaults.js')
+const yaml = require('js-yaml')
+const swaggerUi = require('swagger-ui-express')
+const swaggerJsdoc = require('swagger-jsdoc')
 
 const Movies = Models.Movie
 const Users = Models.User
@@ -11,6 +14,14 @@ const express = require('express'),
 	fs = require('fs'), // import built in node modules fs and path
 	path = require('path'),
 	app = express()
+
+// Load the OpenAPI YAML file
+const openApiDocument = yaml.load(
+	fs.readFileSync('./docs/openapi.yaml', 'utf8')
+)
+
+// Serve the Swagger UI documentation
+app.use('./api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocument))
 
 mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {
 	useNewUrlParser: true,
@@ -34,10 +45,8 @@ app.use(express.static('public'))
 // listen for requests
 app.listen(8080, () => {
 	console.log('Your app is listening on port 8080.')
+	console.log(`Swagger UI available at http://localhost:8080/api-docs`)
 })
-
-// Import Swagger setup
-require('./api-docs')(app)
 
 // ----------------------------------Begin API Logic----------------------------------
 
