@@ -1,6 +1,7 @@
 //-----------------------------Setup-------------------------------
 const mongoose = require('mongoose')
 const Models = require('./models.js')
+const { user } = require('pg/lib/defaults.js')
 
 const Movies = Models.Movie
 const Users = Models.User
@@ -147,12 +148,11 @@ app.post('/movies', async (req, res) => {
 	}
 })
 
-
-
 //------------------------------------------User Logic------------------------------------------
 
-app.get('/users', (req, res) => {
-	res.status(200).json(users)
+// get all users in json format
+app.get('/users', async (req, res) => {
+	await Users.find().then((users) => res.json(users))
 })
 
 //Add a user
@@ -165,16 +165,17 @@ app.get('/users', (req, res) => {
   Birthday: Date
 }*/
 app.post('/users', async (req, res) => {
-	await Users.findOne({ Username: req.body.Username })
+	await Users.findOne({ username: req.body.username })
 		.then((user) => {
 			if (user) {
-				return res.status(400).send(req.body.Username + 'already exists')
+				return res.status(400).send(req.body.username + 'already exists')
 			} else {
 				Users.create({
-					Username: req.body.Username,
-					Password: req.body.Password,
-					Email: req.body.Email,
-					Birthday: req.body.Birthday,
+					username: req.body.username,
+					password: req.body.password,
+					email: req.body.email,
+					birthday: req.body.birthday,
+					favoriteMovies: req.body.favoriteMovies,
 				})
 					.then((user) => {
 						res.status(201).json(user)
@@ -191,39 +192,9 @@ app.post('/users', async (req, res) => {
 		})
 })
 // get a user by username
-/**
- * @swagger
- * /users/{username}:
- *   get:
- *     summary: Retrieve a user by username
- *     parameters:
- *       - in: path
- *         name: username
- *         required: true
- *         schema:
- *           type: string
- *         description: The username of the user
- *     responses:
- *       200:
- *         description: A user object
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 username:
- *                   type: string
- *                 password:
- *                   type: string
- *                 favoriteMovies:
- *                   type: array
- *                   items:
- *                     type: string
- *       404:
- *         description: User not found
- */
-app.get('/users/:username', (req, res) => {
-	let user = users.find((user) => user.username === req.params.username)
+
+app.get('/users/:username', async (req, res) => {
+	let user = await Users.findOne({ username: req.params.username })
 	if (user) {
 		res.json(user)
 	} else {
@@ -231,111 +202,97 @@ app.get('/users/:username', (req, res) => {
 	}
 })
 
-// add a favorite movie to a user and append to favoriteMovies array
-/**
- * @swagger
- * /users/{username}/movies:
- *   post:
- *     summary: Add a favorite movie to a user
- *     parameters:
- *       - in: path
- *         name: username
- *         required: true
- *         schema:
- *           type: string
- *         description: The username of the user
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               favoriteMovie:
- *                 type: string
- *     responses:
- *       200:
- *         description: Favorite movie added
- *       404:
- *         description: User not found
- */
-app.post('/users/:username/movies', (req, res) => {
-	let user = users.find((user) => user.username === req.params.username)
-	if (user) {
-		user.favoriteMovies.push(req.body.favoriteMovie)
-		res.status(200).send('Favorite movie added')
-	} else {
-		res.status(404).send('User not found')
-	}
-})
+// add new favorite movie to user
+// movie format
+// {
+// 	title: String,
+// 	description: String,
+// 	genre: String,
+// 	director: String,
+// 	actors: [String],
+// 	ImagePath: String,
+// 	Featured: Boolean,
+// }
 
-// remove a favorite movie from a user
-/**
- * @swagger
- * /users/{username}/movies:
- *   delete:
- *     summary: Remove a favorite movie from a user
- *     parameters:
- *       - in: path
- *         name: username
- *         required: true
- *         schema:
- *           type: string
- *         description: The username of the user
- *       - in: query
- *         name: favoriteMovie
- *         required: true
- *         schema:
- *           type: string
- *         description: The favorite movie to remove
- *     responses:
- *       200:
- *         description: Favorite movie removed
- *       404:
- *         description: User or movie not found
- */
-app.delete('/users/:username/movies', (req, res) => {
-	let user = users.find((user) => user.username === req.params.username)
+// this needs to first check if the movie exists in database, if not, then create it,
+// get the movie ID and add it to the user's favoriteMovies array
+
+// Also be sure to add to the movies database
+app.post('/users/:username/movies', async (req, res) => {
+	let user = await Users.findOne({ username: req.params.username })
 	if (user) {
-		let movieIndex = user.favoriteMovies.indexOf(req.query.favoriteMovie)
-		// if movie is found, remove it from the favoriteMovies array
-		if (movieIndex !== -1) {
-			user.favoriteMovies.splice(movieIndex, 1)
-			res.status(200).send('Favorite movie removed')
-		} else {
-			res.status(404).send('Movie not found')
+		let movie = await Movies.findOne({ title: req.body.title })
+		if (movie) {
+			user.favoriteMovies.push(movie._id)
+			res.status(201).send('Movie added to favorites')
 		}
 	} else {
 		res.status(404).send('User not found')
 	}
 })
 
-// deregister user by removing their email address
-/**
- * @swagger
- * /users/{username}:
- *   delete:
- *     summary: Deregister a user
- *     parameters:
- *       - in: path
- *         name: username
- *         required: true
- *         schema:
- *           type: string
- *         description: The username of the user
- *     responses:
- *       200:
- *         description: User deregistered
- *       404:
- *         description: User not found
- */
-app.delete('/users/:username', (req, res) => {
-	let userIndex = users.findIndex(
-		(user) => user.username === req.params.username
-	)
+// get favorite movies from a user
+
+app.get('/users/:username/movies', async (req, res) => {
+	let user = await Users.findOne({ username: req.params.username })
+	if (user) {
+		res.json(user.favoriteMovies)
+	}
+})
+
+// remove a favorite movie from a user
+app.delete('/users/:username/favoriteMovies/:movieTitle', async (req, res) => {
+	try {
+		let user = await Users.findOne({ username: req.params.username }).populate(
+			'favoriteMovies'
+		)
+		if (!user) {
+			return res.status(404).send('User not found')
+		}
+
+		let movie = await Movies.findOne({ title: req.params.movieTitle })
+		if (!movie) {
+			return res.status(404).send('Movie not found')
+		}
+
+		let movieIndex = user.favoriteMovies.findIndex((favMovie) =>
+			favMovie._id.equals(movie._id)
+		)
+		if (movieIndex !== -1) {
+			user.favoriteMovies.splice(movieIndex, 1)
+			await user.save()
+			return res
+				.status(200)
+				.send(`Movie, ${req.params.movieTitle} removed from favorites`)
+		} else {
+			return res.status(404).send('Movie not found in user favorites')
+		}
+	} catch (err) {
+		console.error(err)
+		return res.status(500).send('Error: ' + err)
+	}
+})
+
+app.delete('/users/:username', async (req, res) => {
+	let userIndex = await Users.findIndex({ username: req.params.username })
 	if (userIndex !== -1) {
 		users[userIndex].email = null // or use '' to set it to an empty string
 		res.status(200).send('User email removed')
+	} else {
+		res.status(404).send('User not found')
+	}
+})
+
+// update user info
+app.put('/users/:username', async (req, res) => {
+	let user = await Users.findOne({ username: req.params.username })
+	if (user) {
+		user.username = req.body.username
+		user.password = req.body.password
+		user.email = req.body.email
+		user.birthday = req.body.birthday
+		user.favoriteMovies = req.body.favoriteMovies
+		res.status(200).send('User info updated')
 	} else {
 		res.status(404).send('User not found')
 	}

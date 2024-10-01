@@ -162,3 +162,16 @@ Again, similar to the find() example, this query isn’t the same as
 
 `mongoexport -d myFlixMongoDB -c movies -o movies.json`
 `mongoexport -d myFlixMongoDB -c users -o users.json`
+
+
+
+<!-- -------------------------------------Maintenance------------- -->
+
+# Removing columns from collection.
+Removing userid colum from all users
+
+```
+mongosh
+use yourDatabaseName
+db.users.updateMany({}, { $unset: { userid: "" } })
+```
