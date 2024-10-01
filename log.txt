@@ -260,3 +260,10 @@ Tue Sep 03 2024 18:16:34 GMT-0700 (Pacific Daylight Time) - Requested index
 ::1 - - [01/Oct/2024:23:16:51 +0000] "GET /users/billybob/movies HTTP/1.1" 200 -
 ::1 - - [01/Oct/2024:23:16:55 +0000] "GET /users/grace/movies HTTP/1.1" 200 -
 ::1 - - [01/Oct/2024:23:17:18 +0000] "GET /users/grace HTTP/1.1" 200 358
+::1 - - [01/Oct/2024:23:41:07 +0000] "GET /movies/genres HTTP/1.1" 200 146
+::1 - - [01/Oct/2024:23:41:13 +0000] "GET /movies HTTP/1.1" 304 -
+::1 - - [01/Oct/2024:23:41:14 +0000] "GET / HTTP/1.1" 304 -
+::1 - - [01/Oct/2024:23:41:21 +0000] "GET /api-docs/ HTTP/1.1" 404 148
+::1 - - [01/Oct/2024:23:42:54 +0000] "GET /api-docs/ HTTP/1.1" 404 148
+::1 - - [01/Oct/2024:23:46:38 +0000] "GET /api-docs/ HTTP/1.1" 404 148
+::1 - - [01/Oct/2024:23:49:49 +0000] "GET /api-docs/ HTTP/1.1" 404 148
