@@ -35,6 +35,10 @@ app.use(express.json())
 // serve documentation.html from public folder
 app.use(express.static('public'))
 
+let auth = require('./auth')(app)
+const passport = require('passport')
+require('./passport')
+
 // listen for requests
 app.listen(8080, () => {
 	console.log('Your app is listening on port 8080.')
@@ -47,10 +51,20 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/index.html')
 })
 
-app.get('/movies', (req, res) => {
-	// return all movies in json format
-	Movies.find().then((movies) => res.json(movies))
-})
+app.get(
+	'/movies',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		await Movies.find()
+			.then((movies) => {
+				res.status(201).json(movies)
+			})
+			.catch((err) => {
+				console.log(err)
+				res.status(500).send('Error: ' + err)
+			})
+	}
+)
 
 app.get('/movies/genres', async (_, res) => {
 	// using the Movies model and mongoose, console log all genres

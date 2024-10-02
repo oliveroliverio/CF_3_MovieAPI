@@ -112,3 +112,43 @@ module.exports = (router) => {
   });
 }
 ```
+
+# apply JWT authentication to relevant endpoints
+
+Modify this
+```js
+app.get('/movies', async (req, res) => {
+	await Movies.find()
+		.then((movies) => {
+			res.status(201).json(movies)
+		})
+		.catch((err) => {
+			console.log(err)
+			res.status(500).send('Error: ' + err)
+		})
+})
+```
+
+to this
+```js
+app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  await Movies.find()
+    .then((movies) => {
+      res.status(201).json(movies);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
+```
+
+# import auth.js to index.js
+Add these
+```js
+const passport = require('passport');
+require('./passport');
+let auth = require('./auth')(app);
+```
+
+#

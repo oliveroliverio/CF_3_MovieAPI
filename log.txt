@@ -284,3 +284,7 @@ Tue Sep 03 2024 18:16:34 GMT-0700 (Pacific Daylight Time) - Requested index
 ::1 - - [02/Oct/2024:00:01:04 +0000] "POST /users HTTP/1.1" 500 136
 ::1 - - [02/Oct/2024:00:01:10 +0000] "GET /users HTTP/1.1" 200 3609
 ::1 - - [02/Oct/2024:00:02:40 +0000] "POST /users HTTP/1.1" 201 170
+::1 - - [02/Oct/2024:22:45:52 +0000] "GET /movies/ HTTP/1.1" 201 11226
+::1 - - [02/Oct/2024:22:55:48 +0000] "GET /movies/ HTTP/1.1" 401 -
+::1 - - [02/Oct/2024:22:55:49 +0000] "GET /movies/ HTTP/1.1" 401 -
+::1 - - [02/Oct/2024:22:56:09 +0000] "GET /movies HTTP/1.1" 401 -
