@@ -151,4 +151,81 @@ require('./passport');
 let auth = require('./auth')(app);
 ```
 
-#
+# Can't do anything, need to register
+this is a post request
+
+First post to /users endpoint
+
+```js
+{
+    "username": "OliveOil",
+    "password": "yourPasswordHere",
+    "email": "olive.oil@example.com",
+    "birthday": "1990-01-01",
+    "favoriteMovies": ["Titanic", "Inception"]
+}
+```
+
+Next do another post request to the same endpoint, but this time have a params or body.
+
+Add keys, Username and Password, and values of the user posted above.
+
+# Modify the app.put request
+original
+```js
+app.put('/users/:username', async (req, res) => {
+	let user = await Users.findOne({ username: req.params.username })
+	if (user) {
+		user.username = req.body.username
+		user.password = req.body.password
+		user.email = req.body.email
+		user.birthday = req.body.birthday
+		user.favoriteMovies = req.body.favoriteMovies
+		res.status(200).send('User info updated')
+	} else {
+		res.status(404).send('User not found')
+	}
+})
+
+```
+new
+```js
+app.put('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    // CONDITION TO CHECK ADDED HERE
+    if(req.user.username !== req.params.username){
+        return res.status(400).send('Permission denied');
+    }
+    // CONDITION ENDS
+    await Users.findOneAndUpdate({ username: req.params.username }, {
+        $set:
+        {
+            username: req.body.username,
+            password: req.body.password,
+            email: req.body.email,
+            birthday: req.body.birthday
+        }
+    },
+        { new: true }) // This line makes sure that the updated document is returned
+        .then((updatedUser) => {
+            res.json(updatedUser);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send('Error: ' + err);
+        })
+});
+```
+
+Now login with billybob and password to get token.  Copy token
+Go to postman, make a put request to `localhost:8080/users/billybob`
+Go to Authorization, choose bearer token.  Paste into token section.  In the body section paste the new data
+
+```js
+{
+    "username": "billybob_renamed",
+    "password": "securepassword",
+    "email": "billybob@example.com",
+    "birthday": "1985-05-15T00:00:00.000Z",
+    "favoriteMovies": []
+}
+```

@@ -300,19 +300,36 @@ app.delete('/users/:username', async (req, res) => {
 })
 
 // update user info
-app.put('/users/:username', async (req, res) => {
-	let user = await Users.findOne({ username: req.params.username })
-	if (user) {
-		user.username = req.body.username
-		user.password = req.body.password
-		user.email = req.body.email
-		user.birthday = req.body.birthday
-		user.favoriteMovies = req.body.favoriteMovies
-		res.status(200).send('User info updated')
-	} else {
-		res.status(404).send('User not found')
+app.put(
+	'/users/:username',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		// CONDITION TO CHECK ADDED HERE
+		if (req.user.username !== req.params.username) {
+			return res.status(400).send('Permission denied')
+		}
+		// CONDITION ENDS
+		await Users.findOneAndUpdate(
+			{ username: req.params.username },
+			{
+				$set: {
+					username: req.body.username,
+					password: req.body.password,
+					email: req.body.email,
+					birthday: req.body.birthday,
+				},
+			},
+			{ new: true }
+		) // This line makes sure that the updated document is returned
+			.then((updatedUser) => {
+				res.json(updatedUser)
+			})
+			.catch((err) => {
+				console.log(err)
+				res.status(500).send('Error: ' + err)
+			})
 	}
-})
+)
 
 //------------------------------------------Error Handling------------------------------------------
 
