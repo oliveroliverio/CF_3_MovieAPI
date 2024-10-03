@@ -66,110 +66,145 @@ app.get(
 	}
 )
 
-app.get('/movies/genres', async (_, res) => {
-	// using the Movies model and mongoose, console log all genres
-	Movies.find().then((movies) => {
-		let genres = movies.map((movie) => movie.genre.name)
-		res.json(genres)
-	})
-})
+app.get(
+	'/movies/genres',
+	passport.authenticate('jwt', { session: false }),
+	async (_, res) => {
+		// using the Movies model and mongoose, console log all genres
+		Movies.find().then((movies) => {
+			let genres = movies.map((movie) => movie.genre.name)
+			res.json(genres)
+		})
+	}
+)
 
 // returns all movies of a specific genre in json format
-app.get('/movies/genres/:genreName', async (req, res) => {
-	try {
-		let { genreName } = req.params
-		let genre = await Movies.find({ 'genre.name': genreName })
+app.get(
+	'/movies/genres/:genreName',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		try {
+			let { genreName } = req.params
+			let genre = await Movies.find({ 'genre.name': genreName })
 
-		if (genre.length > 0) {
-			return res.status(200).json(genre)
-		} else {
-			return res.status(400).send(`Genre, ${req.params.genreName} not found`)
+			if (genre.length > 0) {
+				return res.status(200).json(genre)
+			} else {
+				return res.status(400).send(`Genre, ${req.params.genreName} not found`)
+			}
+		} catch (err) {
+			console.error(err)
+			return res.status(500).send('Error: ' + err)
 		}
-	} catch (err) {
-		console.error(err)
-		return res.status(500).send('Error: ' + err)
 	}
-})
-app.get('/movies/:title', async (req, res) => {
-	try {
-		let { title } = req.params
-		let movie = await Movies.find({ title: title })
+)
+app.get(
+	'/movies/:title',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		try {
+			let { title } = req.params
+			let movie = await Movies.find({ title: title })
 
-		if (movie) {
-			return res.status(200).json(movie)
-		} else {
-			res.status(400).send(`Movie, ${req.params.title} not found`)
+			if (movie) {
+				return res.status(200).json(movie)
+			} else {
+				res.status(400).send(`Movie, ${req.params.title} not found`)
+			}
+		} catch (err) {
+			console.error(err)
 		}
-	} catch (err) {
-		console.error(err)
 	}
-})
+)
 
 // return the genre of a movie by title
-app.get('/movies/:title/genre', async (req, res) => {
-	try {
-		let { title } = req.params
-		let genre = await Movies.findOne({ title: title }, 'genre')
-		if (genre) {
-			return res.status(200).json(genre)
+app.get(
+	'/movies/:title/genre',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		try {
+			let { title } = req.params
+			let genre = await Movies.findOne({ title: title }, 'genre')
+			if (genre) {
+				return res.status(200).json(genre)
+			}
+		} catch (err) {
+			console.error(err)
 		}
-	} catch (err) {
-		console.error(err)
 	}
-})
+)
 
 // return the director of a movie by title
-app.get('/movies/:title/director', async (req, res) => {
-	try {
-		let { title } = req.params
-		let director = await Movies.findOne({ title: title }, 'director')
-		if (director) {
-			return res.json(director)
+app.get(
+	'/movies/:title/director',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		try {
+			let { title } = req.params
+			let director = await Movies.findOne({ title: title }, 'director')
+			if (director) {
+				return res.json(director)
+			}
+		} catch (err) {
+			console.error(err)
 		}
-	} catch (err) {
-		console.error(err)
 	}
-})
+)
 
 // return the bio of a director by name
-app.get('/directors/:name', async (req, res) => {
-	try {
-		let { name } = req.params
-		let directorInfo = await Movies.findOne({ director: name }, 'director_info')
-		if (directorInfo) {
-			return res.json(directorInfo)
+app.get(
+	'/directors/:name',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		try {
+			let { name } = req.params
+			let directorInfo = await Movies.findOne(
+				{ director: name },
+				'director_info'
+			)
+			if (directorInfo) {
+				return res.json(directorInfo)
+			}
+		} catch (err) {
+			console.error(err)
 		}
-	} catch (err) {
-		console.error(err)
 	}
-})
+)
 
 // add new movie to list of movies
-app.post('/movies', async (req, res) => {
-	try {
-		let newMovie = await Movies.create({
-			title: req.body.title,
-			description: req.body.description,
-			genre: req.body.genre,
-			director: req.body.director,
-			actors: req.body.actors,
-			ImagePath: req.body.ImagePath,
-			Featured: req.body.Featured,
-		})
-		// console log "new movie, ${movie.title} added"
-		console.log(`new movie, ${newMovie.title} added`)
-		res.status(201).json(newMovie)
-	} catch (err) {
-		console.error(err)
+app.post(
+	'/movies',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		try {
+			let newMovie = await Movies.create({
+				title: req.body.title,
+				description: req.body.description,
+				genre: req.body.genre,
+				director: req.body.director,
+				actors: req.body.actors,
+				ImagePath: req.body.ImagePath,
+				Featured: req.body.Featured,
+			})
+			// console log "new movie, ${movie.title} added"
+			console.log(`new movie, ${newMovie.title} added`)
+			res.status(201).json(newMovie)
+		} catch (err) {
+			console.error(err)
+		}
 	}
-})
+)
 
 //------------------------------------------User Logic------------------------------------------
 
 // get all users in json format
-app.get('/users', async (req, res) => {
-	await Users.find().then((users) => res.json(users))
-})
+app.get(
+	'/users',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		await Users.find().then((users) => res.json(users))
+	}
+)
 
 //Add a user
 /* We’ll expect JSON in this format
@@ -180,43 +215,51 @@ app.get('/users', async (req, res) => {
   Email: String,
   Birthday: Date
 }*/
-app.post('/users', async (req, res) => {
-	await Users.findOne({ username: req.body.username })
-		.then((user) => {
-			if (user) {
-				return res.status(400).send(req.body.username + 'already exists')
-			} else {
-				Users.create({
-					username: req.body.username,
-					password: req.body.password,
-					email: req.body.email,
-					birthday: req.body.birthday,
-					favoriteMovies: req.body.favoriteMovies,
-				})
-					.then((user) => {
-						res.status(201).json(user)
+app.post(
+	'/users',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		await Users.findOne({ username: req.body.username })
+			.then((user) => {
+				if (user) {
+					return res.status(400).send(req.body.username + 'already exists')
+				} else {
+					Users.create({
+						username: req.body.username,
+						password: req.body.password,
+						email: req.body.email,
+						birthday: req.body.birthday,
+						favoriteMovies: req.body.favoriteMovies,
 					})
-					.catch((error) => {
-						console.error(error)
-						res.status(500).send('Error: ' + error)
-					})
-			}
-		})
-		.catch((error) => {
-			console.error(error)
-			res.status(500).send('Error: ' + error)
-		})
-})
+						.then((user) => {
+							res.status(201).json(user)
+						})
+						.catch((error) => {
+							console.error(error)
+							res.status(500).send('Error: ' + error)
+						})
+				}
+			})
+			.catch((error) => {
+				console.error(error)
+				res.status(500).send('Error: ' + error)
+			})
+	}
+)
 // get a user by username
 
-app.get('/users/:username', async (req, res) => {
-	let user = await Users.findOne({ username: req.params.username })
-	if (user) {
-		res.json(user)
-	} else {
-		res.status(404).send('User not found')
+app.get(
+	'/users/:username',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		let user = await Users.findOne({ username: req.params.username })
+		if (user) {
+			res.json(user)
+		} else {
+			res.status(404).send('User not found')
+		}
 	}
-})
+)
 
 // add new favorite movie to user
 // movie format
@@ -234,70 +277,86 @@ app.get('/users/:username', async (req, res) => {
 // get the movie ID and add it to the user's favoriteMovies array
 
 // Also be sure to add to the movies database
-app.post('/users/:username/movies', async (req, res) => {
-	let user = await Users.findOne({ username: req.params.username })
-	if (user) {
-		let movie = await Movies.findOne({ title: req.body.title })
-		if (movie) {
-			user.favoriteMovies.push(movie._id)
-			res.status(201).send('Movie added to favorites')
+app.post(
+	'/users/:username/movies',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		let user = await Users.findOne({ username: req.params.username })
+		if (user) {
+			let movie = await Movies.findOne({ title: req.body.title })
+			if (movie) {
+				user.favoriteMovies.push(movie._id)
+				res.status(201).send('Movie added to favorites')
+			}
+		} else {
+			res.status(404).send('User not found')
 		}
-	} else {
-		res.status(404).send('User not found')
 	}
-})
+)
 
 // get favorite movies from a user
 
-app.get('/users/:username/movies', async (req, res) => {
-	let user = await Users.findOne({ username: req.params.username })
-	if (user) {
-		res.json(user.favoriteMovies)
+app.get(
+	'/users/:username/movies',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		let user = await Users.findOne({ username: req.params.username })
+		if (user) {
+			res.json(user.favoriteMovies)
+		}
 	}
-})
+)
 
 // remove a favorite movie from a user
-app.delete('/users/:username/favoriteMovies/:movieTitle', async (req, res) => {
-	try {
-		let user = await Users.findOne({ username: req.params.username }).populate(
-			'favoriteMovies'
-		)
-		if (!user) {
-			return res.status(404).send('User not found')
-		}
+app.delete(
+	'/users/:username/favoriteMovies/:movieTitle',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		try {
+			let user = await Users.findOne({
+				username: req.params.username,
+			}).populate('favoriteMovies')
+			if (!user) {
+				return res.status(404).send('User not found')
+			}
 
-		let movie = await Movies.findOne({ title: req.params.movieTitle })
-		if (!movie) {
-			return res.status(404).send('Movie not found')
-		}
+			let movie = await Movies.findOne({ title: req.params.movieTitle })
+			if (!movie) {
+				return res.status(404).send('Movie not found')
+			}
 
-		let movieIndex = user.favoriteMovies.findIndex((favMovie) =>
-			favMovie._id.equals(movie._id)
-		)
-		if (movieIndex !== -1) {
-			user.favoriteMovies.splice(movieIndex, 1)
-			await user.save()
-			return res
-				.status(200)
-				.send(`Movie, ${req.params.movieTitle} removed from favorites`)
+			let movieIndex = user.favoriteMovies.findIndex((favMovie) =>
+				favMovie._id.equals(movie._id)
+			)
+			if (movieIndex !== -1) {
+				user.favoriteMovies.splice(movieIndex, 1)
+				await user.save()
+				return res
+					.status(200)
+					.send(`Movie, ${req.params.movieTitle} removed from favorites`)
+			} else {
+				return res.status(404).send('Movie not found in user favorites')
+			}
+		} catch (err) {
+			console.error(err)
+			return res.status(500).send('Error: ' + err)
+		}
+	}
+)
+
+app.delete(
+	'/users/:username',
+	passport.authenticate('jwt', { session: false }),
+	async (req, res) => {
+		let userIndex = await Users.findIndex({ username: req.params.username })
+		if (userIndex !== -1) {
+			users[userIndex].email = null // or use '' to set it to an empty string
+			res.status(200).send('User email removed')
 		} else {
-			return res.status(404).send('Movie not found in user favorites')
+			res.status(404).send('User not found')
 		}
-	} catch (err) {
-		console.error(err)
-		return res.status(500).send('Error: ' + err)
 	}
-})
-
-app.delete('/users/:username', async (req, res) => {
-	let userIndex = await Users.findIndex({ username: req.params.username })
-	if (userIndex !== -1) {
-		users[userIndex].email = null // or use '' to set it to an empty string
-		res.status(200).send('User email removed')
-	} else {
-		res.status(404).send('User not found')
-	}
-})
+)
 
 // update user info
 app.put(
