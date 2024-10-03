@@ -35,9 +35,9 @@ app.use(express.json())
 // serve documentation.html from public folder
 app.use(express.static('public'))
 
-let auth = require('./auth')(app)
+let auth = require('./auth.js')(app)
 const passport = require('passport')
-require('./passport')
+require('./passport.js')
 
 // listen for requests
 app.listen(8080, () => {
