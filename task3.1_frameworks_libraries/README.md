@@ -42,11 +42,20 @@ Frameworks help here.  This is because they enforce constraints from day one, an
 
 # myFlix’s Project Needs
 Requirements
-- Scale: You’re not going to be handling large amounts of data on the client-side, so you don’t need to worry too much about performance; however, there is a possibility that this could change, so it’s best not to rule it out just yet.
-- Scope: While your project has a clearly defined scope right now, that’s not to say it won’t grow over time. As a developer, you’ll regularly find yourself learning new things that you might want to implement in existing projects. For this reason, you’ll want to make sure that your client-side can accommodate additional views, functionality, features, and complexity, without the risk of entropy.
-- Documentation: Since you’re just starting out, it’s best to pick a framework that has comprehensive documentation. It’s a bonus if you pick a straightforward and user-friendly framework to work with.
-- Popularity: Given that you’re building this app as a portfolio project, it would be a plus for potential employers if you use a popular framework. You’re also more likely to find solutions to any issues you run into as you build your app.
-- Testability: You want to be able to test your code to make sure it’s error free!
+- **Scale**: You’re not going to be handling large amounts of data on the client-side, so you don’t need to worry too much about performance; however, there is a possibility that this could change, so it’s best not to rule it out just yet.
+- **Scope**: While your project has a clearly defined scope right now, that’s not to say it won’t grow over time. As a developer, you’ll regularly find yourself learning new things that you might want to implement in existing projects. For this reason, you’ll want to make sure that your client-side can accommodate additional views, functionality, features, and complexity, without the risk of entropy.
+- **Documentation**: Since you’re just starting out, it’s best to pick a framework that has comprehensive documentation. It’s a bonus if you pick a straightforward and user-friendly framework to work with.
+- **Popularity**: Given that you’re building this app as a portfolio project, it would be a plus for potential employers if you use a popular framework. You’re also more likely to find solutions to any issues you run into as you build your app.
+- **Testability**: You want to be able to test your code to make sure it’s error free!
 - Tooling and Ecosystem: As a developer in the making, you'll benefit from a good ecosystem of tools to work with as you can continue to develop your skills in the future.
-- Environment: Since you’ll be the sole developer on this project and building it from the ground up, it would be better if you didn't have to worry about working with an existing codebase and an already-established framework.
+- **Environment**: Since you’ll be the sole developer on this project and building it from the ground up, it would be better if you didn't have to worry about working with an existing codebase and an already-established framework.
 
+
+# Popular JS libraries and frameworks
+## React
+
+## Angular
+
+## Vue
+
+# Task
