@@ -474,3 +474,9 @@ As mentioned above, your API is still only hosted on your local server (localhos
 As a CareerFoundry student, you're eligible for a GitHub Education account. This gives you free access to GitHub’s Student Developer Pack, which offers discounts and free access to an awesome array of developer tools and services.
 
 Through this Student Developer Pack, you can use important Heroku features and services (which you'll need for this task and your myFlix project) for free. If you're interested, you can learn more about Heroku's offering for registered GitHub students.
+
+- Sign up for a free Heroku account.
+- Follow the guidelines shared earlier for accessing Heroku’s offering for GitHub Education students.
+- Install the Heroku Toolbelt. Only complete the steps listed on the “Set up” page (i.e., the initial installation, the Heroku login command in your terminal, and checking your version of Node, npm, and Git).
+- Update your “package.json” file to include a “start” script. To do so, open your “package.json” file in your text editor and under the scripts section, add the following code: "start": "node index.js". If you already have a “test” script listed, you can either replace it with your new “start” script or add your start script underneath it (though make sure you add a comma at the end of the “test” script to separate them).
+- Update your app.listen(); function in your “index.js” file. Currently, you have the listening port hardcoded to 8080. Now that people other than you will be using your app, you need to allow this port to change if necessary. This is done by way of process.env.PORT, which looks for a pre-configured port number in the environment variable, and, if nothing is found, sets the port to a certain port number. Go ahead and replace your current app.listen(); function with the following code:
