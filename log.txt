@@ -324,3 +324,5 @@ Tue Sep 03 2024 18:16:34 GMT-0700 (Pacific Daylight Time) - Requested index
 ::1 - - [03/Oct/2024:00:12:17 +0000] "POST /login?Username=DylanDookie2&Password=yourPasswordHere2 HTTP/1.1" 200 567
 ::1 - - [03/Oct/2024:00:12:47 +0000] "GET /movies/ HTTP/1.1" 201 11226
 ::1 - - [04/Oct/2024:00:24:44 +0000] "GET /movies/ HTTP/1.1" 401 -
+::1 - - [04/Oct/2024:21:52:25 +0000] "GET /movies/genres HTTP/1.1" 200 151
+::1 - - [04/Oct/2024:21:56:24 +0000] "GET /movies/genres HTTP/1.1" 304 -
