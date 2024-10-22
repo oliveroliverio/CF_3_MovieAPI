@@ -1,10 +1,27 @@
-//-----------------------------Setup-------------------------------
+//----------------Mongoose Setup--------------
 const mongoose = require('mongoose')
-const Models = require('./models.js')
-const { user } = require('pg/lib/defaults.js')
-const swaggerUi = require('swagger-ui-express')
-const apiDocs = require('./api-docs.js')
+mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+})
 
+// ----------------------------------CORS----------------------------------
+const cors = require('cors')
+let allowedOrigins = ['http://localhost:8080']; // or http://<testsite.com>
+
+app.use(cors({
+	origin: (origin, callback) => {
+		if (!origin) return callback(null, true);
+		if (allowedOrigins.indexOf(origin) === -1) { // If a specific origin isn’t found on the list of allowed origins
+			let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+			return callback(new Error(message), false);
+		}
+		return callback(null, true);
+	}
+}));
+
+// ----------------------------------Models----------------------------------
+const Models = require('./models.js')
 const Movies = Models.Movie
 const Users = Models.User
 
@@ -14,12 +31,13 @@ const express = require('express'),
 	path = require('path'),
 	app = express()
 
+
+// ----------------------------------API Docs----------------------------------
+// const { user } = require('pg/lib/defaults.js')
+// const swaggerUi = require('swagger-ui-express')
+const apiDocs = require('./api-docs.js')
 apiDocs(app)
 
-mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-})
 
 // create a write stream (in append mode)
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
